@@ -31,7 +31,7 @@ export const GetProduct = async(req,res)=>{
         }
 
         // If no search query, return all products.
-        const allItems = await ProductModel.find({});
+        const allItems = await ProductModel.find({}).populate("catagory").exec()
         res.status(200).json(allItems);
     } catch (err) {
         console.error("Error in GetProduct:", err);
@@ -41,22 +41,21 @@ export const GetProduct = async(req,res)=>{
 
 export const PostProduct = async(req,res)=>{
 
-    const {title,price,image}=req.body
+  try {
+    const { title, price, image,catagory } = req.body;
 
-    console.log(title,price,image)
-    await UserModel.create({title,price,image})
-    res.send("ok created")
-
-    try {
-        const { title, price, image } = req.body;
-        
-        // Return the newly created document as JSON
-        const newProduct = await ProductModel.create({ title, price, image });
-        res.status(201).json(newProduct);
-    } catch (err) {
-        console.error("Error creating product:", err);
-        res.status(500).send("Error creating product: " + err.message);
+    if (!title || !price || !image || !catagory) {
+      return res.status(400).json({ message: "All fields are required" });
     }
+
+    const newProduct = await ProductModel.create({ title, price, image ,catagory});
+    res.status(201).json(newProduct);
+
+  } catch (err) {
+    console.error("Error creating product:", err);
+    res.status(500).send("Error creating product: " + err.message);
+  }
+
 }
 
 export const DeleteProduct = async(req,res) => {

@@ -1,21 +1,24 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-const JWT_SECRET ='qwerty'
+const JWT_SECRET = "qwerty";
 
-export const LoginCheck = async (req,res,next) => {
-    try{
-        const authHeader = req.headers['authorization']
+export const LoginCheck = async (req, res, next) => {
+  try {
+    const authHeader = req.headers["authorization"];
 
-        if(!authHeader || !authHeader.startsWith('Bearer ')){
-            return res.status(401).json({message: 'Authorization token missing or malformed'})
-        }
-
-        const token = authHeader.split(' ')[1];
-
-        const decoded = jwt.verify(token,JWT_SECRET)
-
-        req.user = decoded;//optionaly attach the user playload to the request object
-    }catch (err){
-        return res.status(403).json({message:"Invalid or experied token"})
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res
+        .status(401)
+        .json({ message: "Authorization token missing or malformed" });
     }
-}
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    req.user = decoded; //optionaly attach the user playload to the request object
+    next();
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid or expired token" });
+  }
+};

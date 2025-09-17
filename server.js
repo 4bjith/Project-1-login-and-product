@@ -1,31 +1,68 @@
-import dotenv from "dotenv"
-import express from "express"
-import cors from "cors"
-import mongoose from "mongoose"
-import ProductModel from "./models/model.js"
-import UserModel from "./models/user.js"
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
 
-import AuthRoute from "./routes/auth.js"
+import AuthRoute from "./routes/auth.js";
 
-import ProductRoute from "./routes/product.js"
+import ProductRoute from "./routes/product.js";
+import catagoryRoute from "./routes/catagory.js";
+import indCatagory from "./routes/IndCatagory.js";
 
-
-dotenv.config()
+dotenv.config();
 //configuring port and database url
-const PORT = process.env.PORT
-const app = express()
-const MONGO_URL= process.env.MONGO_URL
+const PORT = process.env.PORT;
+const app = express();
+const MONGO_URL = process.env.MONGO_URL;
 
-mongoose.connect(MONGO_URL)
-    .then(() => console.log("MongoDB connected successfully."))
-    .catch(err => console.error("MongoDB connection error:", err));
+mongoose
+  .connect(MONGO_URL)
+  .then(() => console.log("MongoDB connected successfully."))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.use(AuthRoute)
+app.use(AuthRoute);
 
-app.use(ProductRoute)
+app.use(ProductRoute);
+
+app.use(catagoryRoute);
+
+app.use(indCatagory)
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // // Product section
 // app.get("/products",async(req,res)=>{
@@ -44,7 +81,7 @@ app.use(ProductRoute)
 
 //     try {
 //         const { title, price, image } = req.body;
-        
+
 //         // Return the newly created document as JSON
 //         const newProduct = await ProductModel.create({ title, price, image });
 //         res.status(201).json(newProduct);
@@ -97,7 +134,3 @@ app.use(ProductRoute)
 //         res.status(500).send("Error adding new user: " + err.message);
 //     }
 // })
-
-
-
-app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))

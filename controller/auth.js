@@ -5,13 +5,13 @@ export const Login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const usr = await UserModel.findOne({ email:email });
+    const usr = await UserModel.findOne({ email });
 
     if(usr){
       const isMatch = await usr.comparePassword(password)
 
       if(isMatch){
-        const token = jwt.sing({email:usr.email},'qwerty',{expiresIn: '12h'})
+        const token = jwt.sign({email:usr.email},'qwerty',{expiresIn: '4h'})
         res.json({
           status:"Login done",
           token:token
@@ -23,21 +23,6 @@ export const Login = async (req, res) => {
       res.send("no user found")
     }
 
-
-
-
-    // if (usr) {
-    //   return res.status(404).send("No user found");
-    // }
-
-    // const isMatch = await usr.comparePassword(password);
-
-    // if (!isMatch) {
-    //   return res.status(400).send("Invalid credentials");
-    // }
-
-    // return res.status(200).send("Login successful");
-
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).send("Server error");
@@ -48,11 +33,20 @@ export const Login = async (req, res) => {
 export const Register=async(req,res)=>{
     const {name,email,password}=req.body
 
-    await UserModel.create({name,email,password})
+    try{
+      const existing = await UserModel.findOne({email})
+      if(existing){
+        return res.status(400).json({status : "error", message:"User already exist"})
+      }
 
-    res.send("created")
-
-
-
-
+      const newUser = await UserModel.create({name,email,password})
+      res.status(201).json({
+        status:"success",
+        message:"User created",
+        userId: newUser._id,
+      })
+    }catch(err){
+      console.error("Register error : ",err)
+      res.status(500).json({status: "error",message:"Server error"})
+    }
 }

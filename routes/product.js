@@ -1,11 +1,15 @@
-import express from 'express'
-import { DeleteProduct, GetProduct, PostProduct } from '../controller/product.js'
-import { LoginCheck } from '../middleware/auth.js'
+import express from "express";
+import {
+  DeleteProduct,
+  GetProduct,
+  PostProduct,
+} from "../controller/product.js";
+import { LoginCheck } from "../middleware/auth.js";
 
-const product = express.Router()
+const product = express.Router();
 
-product.get("/product",LoginCheck,GetProduct)
-product.post("/product",PostProduct)
-product.delete("/product/:id",DeleteProduct)
+product.get("/product", GetProduct);
+product.post("/product",LoginCheck, PostProduct);
+product.delete("/product/:id",LoginCheck, DeleteProduct);
 
-export default product
+export default product;
