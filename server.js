@@ -8,6 +8,7 @@ import AuthRoute from "./routes/auth.js";
 import ProductRoute from "./routes/product.js";
 import catagoryRoute from "./routes/catagory.js";
 import indCatagory from "./routes/IndCatagory.js";
+import OrderRoute from "./routes/order.js";
 
 dotenv.config();
 //configuring port and database url
@@ -30,39 +31,11 @@ app.use(ProductRoute);
 
 app.use(catagoryRoute);
 
-app.use(indCatagory)
+app.use(indCatagory);
+
+app.use(OrderRoute);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // Product section
 // app.get("/products",async(req,res)=>{
